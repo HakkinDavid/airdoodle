@@ -2,6 +2,10 @@ import SwiftUI
 import ARKit
 
 struct ARDoodleView: UIViewRepresentable {
+    @Binding var selectedTool: DrawingTool
+    @Binding var lineWidth: CGFloat
+    @Binding var selectedColor: UIColor
+    
     func makeUIView(context: Context) -> ARSCNView {
         let arView = ARSCNView()
         arView.delegate = context.coordinator
@@ -12,13 +16,17 @@ struct ARDoodleView: UIViewRepresentable {
         
         let panGesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan(_:)))
         arView.addGestureRecognizer(panGesture)
-
+        
         NotificationCenter.default.addObserver(context.coordinator, selector: #selector(Coordinator.clearCanvas), name: NSNotification.Name("ClearCanvas"), object: nil)
         
         return arView
     }
 
-    func updateUIView(_ uiView: ARSCNView, context: Context) {}
+    func updateUIView(_ uiView: ARSCNView, context: Context) {
+        context.coordinator.selectedTool = selectedTool
+        context.coordinator.lineWidth = lineWidth
+        context.coordinator.selectedColor = selectedColor
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -28,6 +36,9 @@ struct ARDoodleView: UIViewRepresentable {
         var nodes: [SCNNode] = []
         var currentLine: SCNNode?
         var currentLinePositions: [SCNVector3] = []
+        var selectedTool: DrawingTool = .pencil
+        var lineWidth: CGFloat = 2.0
+        var selectedColor: UIColor = .blue
 
         @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
             guard let sceneView = gesture.view as? ARSCNView else { return }
@@ -42,23 +53,32 @@ struct ARDoodleView: UIViewRepresentable {
                 result.worldTransform.columns.3.z
             )
             
-            if gesture.state == .began {
-                startNewLine(at: position, in: sceneView)
-            } else if gesture.state == .changed {
-                addPointToCurrentLine(position, in: sceneView)
+            switch selectedTool {
+            case .pencil:
+                if gesture.state == .began {
+                    startNewLine(at: position, in: sceneView)
+                } else if gesture.state == .changed {
+                    addPointToCurrentLine(position, in: sceneView)
+                }
+            case .eraser:
+                eraseAt(position, in: sceneView)
+            case .circle:
+                if gesture.state == .ended {
+                    drawCircle(at: position, in: sceneView)
+                }
+            case .line:
+                if gesture.state == .ended {
+                    drawStraightLine(to: position, in: sceneView)
+                }
             }
         }
 
         private func startNewLine(at position: SCNVector3, in sceneView: ARSCNView) {
             currentLinePositions = [position]
-            let lineNode = createLineNode(from: position, to: position)
-            sceneView.scene.rootNode.addChildNode(lineNode)
-            nodes.append(lineNode)
-            currentLine = lineNode
         }
 
         private func addPointToCurrentLine(_ position: SCNVector3, in sceneView: ARSCNView) {
-            guard let currentLine = currentLine else { return }
+            guard !currentLinePositions.isEmpty else { return }
             currentLinePositions.append(position)
             let newLineNode = createLineNode(from: currentLinePositions[currentLinePositions.count - 2], to: position)
             sceneView.scene.rootNode.addChildNode(newLineNode)
@@ -66,10 +86,35 @@ struct ARDoodleView: UIViewRepresentable {
         }
 
         private func createLineNode(from start: SCNVector3, to end: SCNVector3) -> SCNNode {
-            let line = SCNGeometry.line(from: start, to: end)
+            let line = SCNGeometry.line(from: start, to: end, width: lineWidth)
             let node = SCNNode(geometry: line)
-            node.geometry?.firstMaterial?.diffuse.contents = UIColor.systemBlue
+            node.geometry?.firstMaterial?.diffuse.contents = selectedColor
             return node
+        }
+
+        private func eraseAt(_ position: SCNVector3, in sceneView: ARSCNView) {
+            for node in nodes {
+                if node.position.distance(to: position) < 0.02 {
+                    node.removeFromParentNode()
+                    nodes.removeAll { $0 == node }
+                    break
+                }
+            }
+        }
+
+        private func drawCircle(at position: SCNVector3, in sceneView: ARSCNView) {
+            let circle = SCNGeometry.circle(at: position, radius: 0.05)
+            let node = SCNNode(geometry: circle)
+            node.geometry?.firstMaterial?.diffuse.contents = selectedColor
+            sceneView.scene.rootNode.addChildNode(node)
+            nodes.append(node)
+        }
+
+        private func drawStraightLine(to position: SCNVector3, in sceneView: ARSCNView) {
+            guard let firstPosition = currentLinePositions.first else { return }
+            let lineNode = createLineNode(from: firstPosition, to: position)
+            sceneView.scene.rootNode.addChildNode(lineNode)
+            nodes.append(lineNode)
         }
 
         @objc func clearCanvas() {
@@ -81,12 +126,28 @@ struct ARDoodleView: UIViewRepresentable {
     }
 }
 
+enum DrawingTool {
+    case pencil, eraser, line, circle
+}
+
 extension SCNGeometry {
-    static func line(from vector1: SCNVector3, to vector2: SCNVector3) -> SCNGeometry {
+    static func line(from vector1: SCNVector3, to vector2: SCNVector3, width: CGFloat) -> SCNGeometry {
         let vertices: [SCNVector3] = [vector1, vector2]
         let source = SCNGeometrySource(vertices: vertices)
         let indices: [Int32] = [0, 1]
         let element = SCNGeometryElement(indices: indices, primitiveType: .line)
         return SCNGeometry(sources: [source], elements: [element])
+    }
+    
+    static func circle(at center: SCNVector3, radius: CGFloat) -> SCNGeometry {
+        let path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: radius * 2, height: radius * 2))
+        let shape = SCNShape(path: path, extrusionDepth: 0.01)
+        return shape
+    }
+}
+
+extension SCNVector3 {
+    func distance(to vector: SCNVector3) -> Float {
+        return sqrt(pow(vector.x - x, 2) + pow(vector.y - y, 2) + pow(vector.z - z, 2))
     }
 }
