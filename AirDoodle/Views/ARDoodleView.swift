@@ -97,7 +97,7 @@ struct ARDoodleView: UIViewRepresentable {
         (start.z + end.z) / 2
     )
     
-    node.look(at: end, up: sceneView?.scene.rootNode.worldUp ?? SCNVector3(0,1,0), localFront: node.worldFront)
+    node.look(at: end, up: SCNVector3(0,1,0), localFront: node.worldFront)
     
     return node
 }

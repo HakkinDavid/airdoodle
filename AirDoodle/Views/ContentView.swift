@@ -1,64 +1,43 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedTool: DrawingTool = .pencil
-    @State private var lineWidth: CGFloat = 2.0
-    @State private var selectedColor: Color = .blue
     
-    private var selectedUIColor: UIColor {
-        UIColor(selectedColor)
-    }
+    @StateObject private var permissionsViewModel = PermissionsViewModel()
     
     var body: some View {
-        ZStack {
-            ARDoodleView(selectedTool: $selectedTool, lineWidth: $lineWidth, selectedColor: .constant(selectedUIColor))
-                .edgesIgnoringSafeArea(.all)
-            
-            VStack {
-                HStack {
-                    Picker("Herramienta", selection: $selectedTool) {
-                        Text("Lápiz").tag(DrawingTool.pencil)
-                        Text("Borrador").tag(DrawingTool.eraser)
-                        Text("Línea").tag(DrawingTool.line)
-                        Text("Círculo").tag(DrawingTool.circle)
+        NavigationStack {
+            VStack(spacing: 30) {
+                Text("AirDoodle")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+                    .onAppear{
+                        if(!permissionsViewModel.cameraGranted) {
+                            permissionsViewModel.requestCameraAccess() }
+                        if(!permissionsViewModel.photoLibraryGranted) {
+                            permissionsViewModel.requestPhotoLibraryAccess() }
                     }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding()
-                }
+                Text("Da click para aceptar los permisos de tu camara, galeria y ubicacion porfa")
+                    .multilineTextAlignment(.center)
                 
-                Slider(value: $lineWidth, in: 1...10, step: 0.5) {
-                    Text("Grosor")
+                VStack(spacing: 20) {
+                    // Camara
+                    Text("SEX!")
                 }
-                .padding()
-                
-                ColorPicker("Color", selection: $selectedColor)
-                    .padding()
-                
-                Button(action: {
-                    NotificationCenter.default.post(name: NSNotification.Name("ClearCanvas"), object: nil)
-                }) {
-                    Text("Borrar Dibujo")
-                        .padding()
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
-                }
-                .padding()
-                
-                Button(action: {
-                    // Lógica futura para tomar foto
-                }) {
-                    Text("Tomar Foto")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
-                }
-                .padding()
+                Spacer()
+                NavigationLink("Next", value: "DoodleUIView")
+                    .disabled(!permissionsViewModel.areAllPermissionsGranted)
+                    .tint(.orange)
             }
-            .background(Color.white.opacity(0.0))
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .ignoresSafeArea(.all)
+            .navigationDestination(for: String.self) { value in
+                if value == "DoodleUIView" {
+                    DoodleUIView()
+                }
+            }
         }
     }
+}
+
+#Preview {
+    ContentView()
 }
