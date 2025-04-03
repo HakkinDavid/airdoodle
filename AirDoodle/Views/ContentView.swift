@@ -22,7 +22,7 @@ struct ContentView: View {
                 
                 VStack(spacing: 20) {
                     // Camara
-                    Text("SEX!")
+                    Text("IMSOSORYY!")
                 }
                 Spacer()
                 NavigationLink("Next", value: "DoodleUIView")
