@@ -80,12 +80,12 @@ struct ARDoodleView: UIViewRepresentable {
         private func addPointToCurrentLine(_ position: SCNVector3, in sceneView: ARSCNView) {
             guard !currentLinePositions.isEmpty else { return }
             currentLinePositions.append(position)
-            let newLineNode = createLineNode(from: currentLinePositions[currentLinePositions.count - 2], to: position)
+            let newLineNode = createLineNode(from: currentLinePositions[currentLinePositions.count - 2], to: position, in: sceneView)
             sceneView.scene.rootNode.addChildNode(newLineNode)
             nodes.append(newLineNode)
         }
 
-        private func createLineNode(from start: SCNVector3, to end: SCNVector3) -> SCNNode {
+        private func createLineNode(from start: SCNVector3, to end: SCNVector3, in sceneView: ARSCNView) -> SCNNode {
     let distance = start.distance(to: end)
     let cylinder = SCNCylinder(radius: lineWidth / 200.0, height: CGFloat(distance))
     cylinder.firstMaterial?.diffuse.contents = selectedColor
@@ -97,7 +97,7 @@ struct ARDoodleView: UIViewRepresentable {
         (start.z + end.z) / 2
     )
     
-    node.look(at: end, up: SCNVector3(0,1,0), localFront: node.worldFront)
+            node.look(at: end, up: sceneView.scene.rootNode.worldUp, localFront: node.worldFront)
     
     return node
 }
@@ -122,7 +122,7 @@ struct ARDoodleView: UIViewRepresentable {
 
         private func drawStraightLine(to position: SCNVector3, in sceneView: ARSCNView) {
             guard let firstPosition = currentLinePositions.first else { return }
-            let lineNode = createLineNode(from: firstPosition, to: position)
+            let lineNode = createLineNode(from: firstPosition, to: position, in: sceneView)
             sceneView.scene.rootNode.addChildNode(lineNode)
             nodes.append(lineNode)
         }
