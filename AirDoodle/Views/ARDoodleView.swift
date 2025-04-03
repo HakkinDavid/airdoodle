@@ -86,11 +86,21 @@ struct ARDoodleView: UIViewRepresentable {
         }
 
         private func createLineNode(from start: SCNVector3, to end: SCNVector3) -> SCNNode {
-            let line = SCNGeometry.line(from: start, to: end, width: lineWidth)
-            let node = SCNNode(geometry: line)
-            node.geometry?.firstMaterial?.diffuse.contents = selectedColor
-            return node
-        }
+    let distance = start.distance(to: end)
+    let cylinder = SCNCylinder(radius: lineWidth / 200.0, height: CGFloat(distance))
+    cylinder.firstMaterial?.diffuse.contents = selectedColor
+    
+    let node = SCNNode(geometry: cylinder)
+    node.position = SCNVector3(
+        (start.x + end.x) / 2,
+        (start.y + end.y) / 2,
+        (start.z + end.z) / 2
+    )
+    
+    node.look(at: end, up: sceneView?.scene.rootNode.worldUp ?? SCNVector3(0,1,0), localFront: node.worldFront)
+    
+    return node
+}
 
         private func eraseAt(_ position: SCNVector3, in sceneView: ARSCNView) {
             for node in nodes {
