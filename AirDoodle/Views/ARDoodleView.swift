@@ -19,7 +19,13 @@ struct ARDoodleView: UIViewRepresentable {
         
         NotificationCenter.default.addObserver(context.coordinator, selector: #selector(Coordinator.clearCanvas), name: NSNotification.Name("ClearCanvas"), object: nil)
         
-        NotificationCenter.default.addObserver(context.coordinator, selector: #selector(Coordinator.screenshotCanvas(arView)), name: NSNotification.Name("ScreenshotCanvas"), object: nil)
+        NotificationCenter.default.addObserver(
+            context.coordinator,
+            selector: #selector(Coordinator.screenshotCanvas),
+            name: NSNotification.Name("ScreenshotCanvas"),
+            object: arView // Pass the arView instance here
+        )
+
         
         return arView
     }
@@ -135,6 +141,12 @@ struct ARDoodleView: UIViewRepresentable {
             }
             nodes.removeAll()
         }
+        
+        @objc func screenshotCanvas(in sceneView: ARSCNView) {
+            let screenshot = sceneView.snapshot()
+            UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil)
+            print("Screenshot taken!")
+        }
     }
 }
 
@@ -163,3 +175,7 @@ extension SCNVector3 {
         return sqrt(pow(vector.x - x, 2) + pow(vector.y - y, 2) + pow(vector.z - z, 2))
     }
 }
+    
+        /*let arView = ARSCNView()
+        arView.scene = SCNScene()
+        return arView.snapshot()*/
