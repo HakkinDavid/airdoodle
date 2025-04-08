@@ -19,6 +19,8 @@ struct ARDoodleView: UIViewRepresentable {
         
         NotificationCenter.default.addObserver(context.coordinator, selector: #selector(Coordinator.clearCanvas), name: NSNotification.Name("ClearCanvas"), object: nil)
         
+        NotificationCenter.default.addObserver(context.coordinator, selector: #selector(Coordinator.screenshotCanvas(arView)), name: NSNotification.Name("ScreenshotCanvas"), object: nil)
+        
         return arView
     }
 

@@ -46,7 +46,7 @@ struct DoodleUIView: View {
                 .padding()
                 
                 Button(action: {
-                    // Lógica futura para tomar foto
+                    NotificationCenter.default.post(name: NSNotification.Name("ScreenshotCanvas"), object: nil)
                 }) {
                     Text("Tomar Foto")
                         .padding()
