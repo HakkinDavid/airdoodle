@@ -47,6 +47,7 @@ struct DoodleUIView: View {
                 
                 Button(action: {
                     // Lógica futura para tomar foto
+                    screenshotObject(_:)
                 }) {
                     Text("Tomar Foto")
                         .padding()

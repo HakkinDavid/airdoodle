@@ -397,9 +397,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4VAQ6PKXRG;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = Pleaseeeee;
-				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = PLEASE;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Se requiere para utilizar el AR";
+				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "Se requiere para guardar datos";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Se requiere para guardar las imágenes";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
@@ -411,7 +411,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.HakkinDavid.AirDoodle;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HakkinDavid.AirDoodleTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -428,9 +428,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4VAQ6PKXRG;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = Pleaseeeee;
-				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = PLEASE;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Se requiere para utilizar el AR";
+				INFOPLIST_KEY_NSFileProviderDomainUsageDescription = "Se requiere para guardar datos";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Se requiere para guardar las imágenes";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
@@ -442,7 +442,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.HakkinDavid.AirDoodle;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HakkinDavid.AirDoodleTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

@@ -161,3 +161,19 @@ extension SCNVector3 {
         return sqrt(pow(vector.x - x, 2) + pow(vector.y - y, 2) + pow(vector.z - z, 2))
     }
 }
+func screenshotObject(_ gesture: UIPanGestureRecognizer) -> UIImage? {
+    /*guard let sceneView = gesture.view as? ARSCNView else { return }
+    return sceneView.snapshot()*/
+    do{
+        let v = gesture.view as? SCNView
+        return v!.snapshot()
+        
+    } catch {
+        print("No hay nada en la vista.")
+        return nil
+    }
+}
+    
+        /*let arView = ARSCNView()
+        arView.scene = SCNScene()
+        return arView.snapshot()*/
