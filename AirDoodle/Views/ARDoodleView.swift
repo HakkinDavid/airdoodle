@@ -175,7 +175,3 @@ extension SCNVector3 {
         return sqrt(pow(vector.x - x, 2) + pow(vector.y - y, 2) + pow(vector.z - z, 2))
     }
 }
-    
-        /*let arView = ARSCNView()
-        arView.scene = SCNScene()
-        return arView.snapshot()*/
