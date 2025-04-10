@@ -145,15 +145,14 @@ struct ARDoodleView: UIViewRepresentable {
             nodes.append(lineNode)
         }
         
-        @objc func saveScene(named name: String) {
-            let scene = SCNScene()
-            nodes.forEach { scene.rootNode.addChildNode($0.clone()) }
+        @objc func saveScene(named name: String, in sceneView: ARSCNView) {
+            nodes.forEach { sceneView.scene.rootNode.addChildNode($0.clone()) }
 
             let url = FileManager.default
                 .urls(for: .documentDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent("\(name).scn")
 
-            scene.write(to: url, options: nil, delegate: nil)  // Guarda como archivo .scn
+            sceneView.scene.write(to: url, options: nil, delegate: nil)  // Guarda como archivo .scn
 
             // Guarda metadatos en Core Data
             let doodle = Doodle(context: PersistenceController.shared.container.viewContext)
@@ -163,13 +162,21 @@ struct ARDoodleView: UIViewRepresentable {
             doodle.filePath = url.path
 
             try? PersistenceController.shared.container.viewContext.save()
+            
+            print("Se guardó la escena como \(name).scn (\(url.path), \(doodle.id))")
         }
         
         @objc func loadScene(from name: String, in sceneView: ARSCNView) {
-            let url = URL(fileURLWithPath: "\(name).scn")
+            let url = FileManager.default
+                .urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("\(name).scn")
             if let scene = try? SCNScene(url: url, options: nil) {
                 sceneView.scene.rootNode.childNodes.forEach { $0.removeFromParentNode() }
                 scene.rootNode.childNodes.forEach { sceneView.scene.rootNode.addChildNode($0) }
+                print("Se ha cargado la escena \(name).scn")
+            }
+            else {
+                print("No se encontró la escena \(name).scn")
             }
         }
 
