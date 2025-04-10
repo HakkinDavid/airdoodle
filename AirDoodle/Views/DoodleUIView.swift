@@ -1,9 +1,12 @@
 import SwiftUI
+import ARKit
 
 struct DoodleUIView: View {
     @State private var selectedTool: DrawingTool = .pencil
     @State private var lineWidth: CGFloat = 2.0
     @State private var selectedColor: Color = .blue
+    @State private var coordinator = ARDoodleView.Coordinator()
+    @State private var arView = ARSCNView()
     
     private var selectedUIColor: UIColor {
         UIColor(selectedColor)
@@ -11,7 +14,7 @@ struct DoodleUIView: View {
     
     var body: some View {
         ZStack {
-            ARDoodleView(selectedTool: $selectedTool, lineWidth: $lineWidth, selectedColor: .constant(selectedUIColor))
+            ARDoodleView(selectedTool: $selectedTool, lineWidth: $lineWidth, selectedColor: .constant(selectedUIColor), coordinator: $coordinator, arView: $arView)
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
@@ -46,7 +49,7 @@ struct DoodleUIView: View {
                 .padding()
                 
                 Button(action: {
-                    NotificationCenter.default.post(name: NSNotification.Name("ScreenshotCanvas"), object: nil)
+                    $coordinator.wrappedValue.screenshotCanvas(in: $arView.wrappedValue)
                 }) {
                     Text("Tomar Foto")
                         .padding()

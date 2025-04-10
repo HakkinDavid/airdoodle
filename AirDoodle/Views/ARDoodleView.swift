@@ -5,9 +5,10 @@ struct ARDoodleView: UIViewRepresentable {
     @Binding var selectedTool: DrawingTool
     @Binding var lineWidth: CGFloat
     @Binding var selectedColor: UIColor
+    @Binding var coordinator: Coordinator
+    @Binding var arView: ARSCNView
     
     func makeUIView(context: Context) -> ARSCNView {
-        let arView = ARSCNView()
         arView.delegate = context.coordinator
         arView.scene = SCNScene()
         
@@ -23,7 +24,7 @@ struct ARDoodleView: UIViewRepresentable {
             context.coordinator,
             selector: #selector(Coordinator.screenshotCanvas),
             name: NSNotification.Name("ScreenshotCanvas"),
-            object: arView // Pass the arView instance here
+            object: arView
         )
 
         
@@ -144,8 +145,7 @@ struct ARDoodleView: UIViewRepresentable {
         
         @objc func screenshotCanvas(in sceneView: ARSCNView) {
             let screenshot = sceneView.snapshot()
-            UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil)
-            print("Screenshot taken!")
+            UIImageWriteToSavedPhotosAlbum(screenshot, nil , nil , nil)
         }
     }
 }
