@@ -101,5 +101,5 @@ struct OptionsView: View {
 }
 
 #Preview {
-    ContentView()
+    OptionsView()
 }
