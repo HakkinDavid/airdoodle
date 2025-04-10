@@ -26,6 +26,17 @@ struct ARDoodleView: UIViewRepresentable {
             name: NSNotification.Name("ScreenshotCanvas"),
             object: arView
         )
+        
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("LoadDoodle"),
+            object: nil,
+            queue: .main
+        ) { notif in
+            if let path = notif.object as? String {
+                coordinator.loadScene(from: path, in: arView)
+            }
+        }
+
 
         
         return arView
@@ -135,6 +146,36 @@ struct ARDoodleView: UIViewRepresentable {
             sceneView.scene.rootNode.addChildNode(lineNode)
             nodes.append(lineNode)
         }
+        
+        func saveScene(named name: String) {
+            let scene = SCNScene()
+            nodes.forEach { scene.rootNode.addChildNode($0.clone()) }
+
+            let url = FileManager.default
+                .urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("\(name).scn")
+
+            scene.write(to: url, options: nil, delegate: nil)  // Guarda como archivo .scn
+
+            // Guarda metadatos en Core Data
+            let doodle = Doodle(context: PersistenceController.shared.container.viewContext)
+            doodle.id = UUID()
+            doodle.name = name
+            doodle.date = Date()
+            doodle.filePath = url.path
+
+            try? PersistenceController.shared.container.viewContext.save()
+        }
+        
+        func loadScene(from path: String, in sceneView: ARSCNView) {
+            let url = URL(fileURLWithPath: path)
+            if let scene = try? SCNScene(url: url, options: nil) {
+                sceneView.scene.rootNode.childNodes.forEach { $0.removeFromParentNode() }
+                scene.rootNode.childNodes.forEach { sceneView.scene.rootNode.addChildNode($0) }
+            }
+        }
+
+
 
         @objc func clearCanvas() {
             for node in nodes {

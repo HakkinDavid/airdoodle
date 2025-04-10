@@ -9,6 +9,6 @@ import SwiftUI
 
 struct SavedDoodlesView: View {
     var body: some View {
-        Text("SavedDoodlesView")
+        Text("Próximamente")
     }
 }
