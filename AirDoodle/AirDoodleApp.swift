@@ -4,7 +4,7 @@ import SwiftUI
 struct AirDoodleApp: App {
     var body: some Scene {
         WindowGroup {
-            OptionsView()
+            PermissionsView()
         }
     }
 }

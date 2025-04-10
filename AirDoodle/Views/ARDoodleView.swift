@@ -145,9 +145,7 @@ struct ARDoodleView: UIViewRepresentable {
         
         @objc func screenshotCanvas(in sceneView: ARSCNView) {
             let screenshot = sceneView.snapshot()
-            print(screenshot)
             UIImageWriteToSavedPhotosAlbum(screenshot, nil , nil , nil)
-            print("Screenshot taken!")
         }
     }
 }

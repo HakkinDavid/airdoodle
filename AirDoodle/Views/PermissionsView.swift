@@ -9,7 +9,7 @@ struct PermissionsView: View {
     
     var body: some View {
         if permissionsGranted {
-            DoodleUIView()
+            OptionsView()
         } else {
             NavigationStack {
                 ZStack {
@@ -29,7 +29,7 @@ struct PermissionsView: View {
                             .padding(.top, 50)
                             .shadow(color: .black.opacity(0.8), radius: 7, y: 3)
                         
-                        Text("Por favor, acepta los permisos de tu cámara, galería y ubicación para continuar.")
+                        Text("Por favor, acepta los permisos de tu cámara y galería para continuar.")
                             .font(.title3)
                             .multilineTextAlignment(.center)
                             .foregroundColor(.black.opacity(0.75))
@@ -73,7 +73,7 @@ struct PermissionsView: View {
                         
                         Spacer()
                         
-                        NavigationLink("Continuar", value: "DoodleUIView")
+                        NavigationLink("Continuar", value: "OptionsView")
                             .disabled(!permissionsViewModel.areAllPermissionsGranted)
                             .font(.title2)
                             .foregroundColor(.white)
@@ -84,8 +84,8 @@ struct PermissionsView: View {
                             .opacity(permissionsViewModel.areAllPermissionsGranted ? 1 : 0.5)
                     }
                     .navigationDestination(for: String.self) { value in
-                        if value == "DoodleUIView" {
-                            DoodleUIView()
+                        if value == "OptionsView" {
+                            OptionsView()
                         }
                     }
                 }
