@@ -24,13 +24,13 @@ struct PermissionsView: View {
                     VStack(spacing: 30) {
                         Spacer(minLength: 70)
                         Text("AirDoodle")
-                            .font(.system(size: getSize()*3, weight: .bold))
+                            .font(.system(size: getSize()*2.7, weight: .bold))
                             .foregroundColor(.white)
                             .padding(.top, 50)
                             .shadow(color: .black.opacity(0.8), radius: 7, y: 3)
                         
                         Text("Por favor, acepta los permisos de tu cámara y galería para continuar.")
-                            .font(.system(size: getSize()))
+                            .font(.system(size: getSize()*0.9))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.black.opacity(0.75))
                             .padding(.horizontal, 20)

@@ -1,0 +1,9 @@
+//
+//  .gitignore
+//  AirDoodle
+//
+//  Created by CETYS Universidad  on 09/04/25.
+//
+### Xcode ###
+## User settings
+xcuserdata/
