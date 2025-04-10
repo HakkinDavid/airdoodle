@@ -13,24 +13,25 @@ struct PermissionsView: View {
         } else {
             NavigationStack {
                 ZStack {
+                    let bgRandom = Int.random(in: 1...4)
+                    let colors = [Color.red.opacity(0.3), Color.orange.opacity(0.3), Color.yellow.opacity(0.3), Color.green.opacity(0.3), Color.blue.opacity(0.3)]
                     LinearGradient(
-                        gradient: Gradient(colors: [.red.opacity(0.3), .orange.opacity(0.3), .yellow.opacity(0.3), .green.opacity(0.3), .blue.opacity(0.3)]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+                        gradient: Gradient(colors: (bgRandom < 3) ? colors : colors.reversed()),
+                        startPoint: (bgRandom % 2 == 0) ? .topLeading : .topTrailing,
+                        endPoint: (bgRandom % 2 == 0) ? .bottomTrailing : .bottomLeading
                     )
                     .ignoresSafeArea()
-                    
                     
                     VStack(spacing: 30) {
                         Spacer(minLength: 70)
                         Text("AirDoodle")
-                            .font(.system(size: getSize()*3, weight: .bold))
+                            .font(.system(size: getSize()*2.7, weight: .bold))
                             .foregroundColor(.white)
                             .padding(.top, 50)
                             .shadow(color: .black.opacity(0.8), radius: 7, y: 3)
                         
                         Text("Por favor, acepta los permisos de tu cámara y galería para continuar.")
-                            .font(.system(size: getSize()))
+                            .font(.system(size: getSize()*0.9))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.black.opacity(0.75))
                             .padding(.horizontal, 20)
