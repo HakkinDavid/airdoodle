@@ -165,8 +165,8 @@ struct ARDoodleView: UIViewRepresentable {
             try? PersistenceController.shared.container.viewContext.save()
         }
         
-        @objc func loadScene(from path: String, in sceneView: ARSCNView) {
-            let url = URL(fileURLWithPath: path)
+        @objc func loadScene(from name: String, in sceneView: ARSCNView) {
+            let url = URL(fileURLWithPath: "\(name).scn")
             if let scene = try? SCNScene(url: url, options: nil) {
                 sceneView.scene.rootNode.childNodes.forEach { $0.removeFromParentNode() }
                 scene.rootNode.childNodes.forEach { sceneView.scene.rootNode.addChildNode($0) }
