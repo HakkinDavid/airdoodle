@@ -3,13 +3,13 @@ import SwiftUI
 struct PermissionsView: View {
     
     @StateObject private var permissionsViewModel = PermissionsViewModel()
-    
+    @Environment(\.sizeCategory) var sizeCategory
     // Usamos UserDefaults para guardar si los permisos han sido concedidos previamente
     @AppStorage("permissionsGranted") private var permissionsGranted: Bool = false
     
     var body: some View {
         if permissionsGranted {
-            DoodleUIView()
+            OptionsView()
         } else {
             NavigationStack {
                 ZStack {
@@ -24,58 +24,60 @@ struct PermissionsView: View {
                     VStack(spacing: 30) {
                         Spacer(minLength: 70)
                         Text("AirDoodle")
-                            .font(.system(size: 60, weight: .bold))
+                            .font(.system(size: getSize()*3, weight: .bold))
                             .foregroundColor(.white)
                             .padding(.top, 50)
                             .shadow(color: .black.opacity(0.8), radius: 7, y: 3)
                         
-                        Text("Por favor, acepta los permisos de tu cámara, galería y ubicación para continuar.")
-                            .font(.title3)
+                        Text("Por favor, acepta los permisos de tu cámara y galería para continuar.")
+                            .font(.system(size: getSize()))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.black.opacity(0.75))
                             .padding(.horizontal, 20)
                         
-                        VStack(spacing: 20) {
+                        VStack(spacing: getSize()) {
                             // Permiso de Cámara
                             if !permissionsViewModel.cameraGranted {
                                 Text("Permiso para la cámara necesario.")
                                     .foregroundColor(.red)
-                                    .font(.body)
+                                    .font(.system(size: getSize()))
                                 Button("Solicitar acceso a la cámara") {
                                     permissionsViewModel.requestCameraAccess()
                                 }
+                                .font(.system(size: getSize()))
                                 .buttonStyle(.borderedProminent)
                                 .tint(.blue)
                             } else {
                                 Text("Gracias, cámara habilitada.")
                                     .foregroundColor(.green)
-                                    .font(.body)
+                                    .font(.system(size: getSize()))
                             }
                             
                             // Permiso para la galería
                             if !permissionsViewModel.photoLibraryGranted {
                                 Text("Permiso para la galería necesario.")
                                     .foregroundColor(.red)
-                                    .font(.body)
-                                    .padding(.top, 15)
+                                    .font(.system(size: getSize()))
+                                    .padding(.top, getSize())
                                 Button("Solicitar acceso a la galería") {
                                     permissionsViewModel.requestPhotoLibraryAccess()
                                 }
+                                .font(.system(size: getSize()))
                                 .buttonStyle(.borderedProminent)
                                 .tint(.blue)
                             } else {
                                 Text("Gracias, galería habilitada.")
                                     .foregroundColor(.green)
-                                    .font(.body)
+                                    .font(.system(size: getSize()))
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, getSize())
                         
                         Spacer()
                         
-                        NavigationLink("Continuar", value: "DoodleUIView")
+                        NavigationLink("Continuar", value: "OptionsView")
                             .disabled(!permissionsViewModel.areAllPermissionsGranted)
-                            .font(.title2)
+                            .font(.system(size: getSize()*1.25))
                             .foregroundColor(.white)
                             .padding()
                             .background(permissionsViewModel.areAllPermissionsGranted ? Color.orange : Color.gray)
@@ -84,8 +86,8 @@ struct PermissionsView: View {
                             .opacity(permissionsViewModel.areAllPermissionsGranted ? 1 : 0.5)
                     }
                     .navigationDestination(for: String.self) { value in
-                        if value == "DoodleUIView" {
-                            DoodleUIView()
+                        if value == "OptionsView" {
+                            OptionsView()
                         }
                     }
                 }
@@ -98,6 +100,20 @@ struct PermissionsView: View {
             }
         }
     }
+    func getSize() -> CGFloat {
+        switch sizeCategory {
+        case .extraSmall, .small:
+            return 14
+        case .medium:
+            return 20
+        case .large:
+            return 24
+        case .extraLarge, .extraExtraLarge, .extraExtraExtraLarge:
+            return 36
+        default:
+            return 20
+        }
+      }
 }
 
 #Preview {
