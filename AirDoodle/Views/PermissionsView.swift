@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ContentView: View {
+struct PermissionsView: View {
     
     @StateObject private var permissionsViewModel = PermissionsViewModel()
     
@@ -101,5 +101,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    PermissionsView()
 }
