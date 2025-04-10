@@ -19,6 +19,7 @@ struct PermissionsView: View {
                     Rectangle()
                         .fill(Color.white)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .ignoresSafeArea()
                     
                     LinearGradient(
                         gradient: Gradient(colors: (bgRandom < 3) ? colors : colors.reversed()),
@@ -33,12 +34,16 @@ struct PermissionsView: View {
                             .font(.system(size: getSize()*2.7, weight: .bold))
                             .foregroundColor(.white)
                             .padding(.top, 50)
+                            .padding(.bottom, 10)
                             .shadow(color: .black.opacity(0.8), radius: 7, y: 3)
                         
                         Text("Por favor, acepta los permisos de tu cámara y galería para continuar.")
                             .font(.system(size: getSize()*0.9))
                             .multilineTextAlignment(.center)
-                            .foregroundColor(.black.opacity(0.75))
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.gray.opacity(0.5))
+                            .cornerRadius(10)
                             .padding(.horizontal, 20)
                         
                         VStack(spacing: getSize()) {
@@ -64,7 +69,7 @@ struct PermissionsView: View {
                                 Text("Permiso para la galería necesario.")
                                     .foregroundColor(.red)
                                     .font(.system(size: getSize()))
-                                    .padding(.top, getSize())
+                                    .padding(.top, getSize()*0.5)
                                 Button("Solicitar acceso a la galería") {
                                     permissionsViewModel.requestPhotoLibraryAccess()
                                 }
