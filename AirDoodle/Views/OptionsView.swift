@@ -29,7 +29,7 @@ struct OptionsView: View {
                             .background(Color.gray.opacity(0.45))
                             .cornerRadius(10)
                         
-                        NavigationLink("🌠 Dibujos guardados", value: "GagaView")
+                        NavigationLink("🌠 Dibujos guardados", value: "SavedDoodlesView")
                             .font(.title)
                             .fontWeight(.semibold)
                             .foregroundColor(.white)
@@ -43,8 +43,8 @@ struct OptionsView: View {
                 .navigationDestination(for: String.self) { value in
                     if value == "DoodleUIView" {
                         DoodleUIView()
-                    } else if value == "GagaView" {
-                        OptionsView()
+                    } else if value == "SavedDoodlesView" {
+                        SavedDoodlesView()
                     }
                 }
             }
