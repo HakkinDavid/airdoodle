@@ -5,7 +5,13 @@ struct OptionsView: View {
         NavigationStack {
             ZStack {
                 let bgRandom = Int.random(in: 1...4)
-                let colors = [Color.red.opacity(0.3), Color.orange.opacity(0.3), Color.yellow.opacity(0.3), Color.green.opacity(0.3), Color.blue.opacity(0.3)]
+                let colors = [Color.red.opacity(0.5), Color.orange.opacity(0.5), Color.yellow.opacity(0.5), Color.green.opacity(0.5), Color.blue.opacity(0.5)]
+                
+                Rectangle()
+                    .fill(Color.white)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
+                
                 LinearGradient(
                     gradient: Gradient(colors: (bgRandom < 3) ? colors : colors.reversed()),
                     startPoint: (bgRandom % 2 == 0) ? .topLeading : .topTrailing,
