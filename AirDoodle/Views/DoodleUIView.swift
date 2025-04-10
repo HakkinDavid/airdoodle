@@ -62,7 +62,7 @@ struct DoodleUIView: View {
                 .padding()
                 
                 Button(action: {
-                    $coordinator.wrappedValue.saveScene(named: $sceneName.wrappedValue)
+                    $coordinator.wrappedValue.saveScene(named: $sceneName.wrappedValue, in: $arView.wrappedValue)
                 }) {
                     Text("Guardar escena")
                         .padding()
@@ -73,7 +73,7 @@ struct DoodleUIView: View {
                 .padding()
                 
                 Button(action: {
-                    NotificationCenter.default.post(name: NSNotification.Name("LoadScene"), object: ($sceneName, $arView))
+                    $coordinator.wrappedValue.loadScene(from: $sceneName.wrappedValue, in: $arView.wrappedValue)
                 }) {
                     Text("Cargar escena")
                         .padding()

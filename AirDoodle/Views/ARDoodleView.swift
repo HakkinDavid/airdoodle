@@ -32,7 +32,7 @@ struct ARDoodleView: UIViewRepresentable {
             context.coordinator,
             selector: #selector(Coordinator.loadScene),
             name: NSNotification.Name("LoadScene"),
-            object: ($sceneName, $arView)
+            object: (sceneName, arView)
         )
 
 
@@ -167,6 +167,7 @@ struct ARDoodleView: UIViewRepresentable {
         }
         
         @objc func loadScene(from name: String, in sceneView: ARSCNView) {
+            print("Intentando cargar escena...")
             let url = FileManager.default
                 .urls(for: .documentDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent("\(name).scn")
