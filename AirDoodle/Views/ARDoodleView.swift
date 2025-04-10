@@ -7,6 +7,7 @@ struct ARDoodleView: UIViewRepresentable {
     @Binding var selectedColor: UIColor
     @Binding var coordinator: Coordinator
     @Binding var arView: ARSCNView
+    @Binding var sceneName: String
     
     func makeUIView(context: Context) -> ARSCNView {
         arView.delegate = context.coordinator
@@ -28,14 +29,11 @@ struct ARDoodleView: UIViewRepresentable {
         )
         
         NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("LoadDoodle"),
-            object: nil,
-            queue: .main
-        ) { notif in
-            if let path = notif.object as? String {
-                coordinator.loadScene(from: path, in: arView)
-            }
-        }
+            context.coordinator,
+            selector: #selector(Coordinator.loadScene),
+            name: NSNotification.Name("LoadScene"),
+            object: ($sceneName, $arView)
+        )
 
 
         
@@ -147,7 +145,7 @@ struct ARDoodleView: UIViewRepresentable {
             nodes.append(lineNode)
         }
         
-        func saveScene(named name: String) {
+        @objc func saveScene(named name: String) {
             let scene = SCNScene()
             nodes.forEach { scene.rootNode.addChildNode($0.clone()) }
 
@@ -167,7 +165,7 @@ struct ARDoodleView: UIViewRepresentable {
             try? PersistenceController.shared.container.viewContext.save()
         }
         
-        func loadScene(from path: String, in sceneView: ARSCNView) {
+        @objc func loadScene(from path: String, in sceneView: ARSCNView) {
             let url = URL(fileURLWithPath: path)
             if let scene = try? SCNScene(url: url, options: nil) {
                 sceneView.scene.rootNode.childNodes.forEach { $0.removeFromParentNode() }

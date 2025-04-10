@@ -7,6 +7,7 @@ struct DoodleUIView: View {
     @State private var selectedColor: Color = .blue
     @State private var coordinator = ARDoodleView.Coordinator()
     @State private var arView = ARSCNView()
+    @State private var sceneName = "art_scene_" + String(Date().timeIntervalSince1970)
     
     private var selectedUIColor: UIColor {
         UIColor(selectedColor)
@@ -14,11 +15,12 @@ struct DoodleUIView: View {
     
     var body: some View {
         ZStack {
-            ARDoodleView(selectedTool: $selectedTool, lineWidth: $lineWidth, selectedColor: .constant(selectedUIColor), coordinator: $coordinator, arView: $arView)
+            ARDoodleView(selectedTool: $selectedTool, lineWidth: $lineWidth, selectedColor: .constant(selectedUIColor), coordinator: $coordinator, arView: $arView, sceneName: $sceneName)
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
                 HStack {
+                    TextField("Nombre de la escena", text: $sceneName)
                     Picker("Herramienta", selection: $selectedTool) {
                         Text("Lápiz").tag(DrawingTool.pencil)
                         Text("Borrador").tag(DrawingTool.eraser)
@@ -54,6 +56,28 @@ struct DoodleUIView: View {
                     Text("Tomar Foto")
                         .padding()
                         .background(Color.blue)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                }
+                .padding()
+                
+                Button(action: {
+                    $coordinator.wrappedValue.saveScene(named: $sceneName.wrappedValue)
+                }) {
+                    Text("Guardar escena")
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .clipShape(Capsule())
+                }
+                .padding()
+                
+                Button(action: {
+                    NotificationCenter.default.post(name: NSNotification.Name("LoadScene"), object: ($sceneName, $arView))
+                }) {
+                    Text("Cargar escena")
+                        .padding()
+                        .background(Color.green)
                         .foregroundColor(.white)
                         .clipShape(Capsule())
                 }
