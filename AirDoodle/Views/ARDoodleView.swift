@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreData
 import ARKit
 
 struct ARDoodleView: UIViewRepresentable {
@@ -152,18 +153,33 @@ struct ARDoodleView: UIViewRepresentable {
                 .urls(for: .documentDirectory, in: .userDomainMask)[0]
                 .appendingPathComponent("\(name).scn")
 
-            sceneView.scene.write(to: url, options: nil, delegate: nil)  // Guarda como archivo .scn
+            sceneView.scene.write(to: url, options: nil, delegate: nil)
 
-            // Guarda metadatos en Core Data
-            let doodle = Doodle(context: PersistenceController.shared.container.viewContext)
-            doodle.id = UUID()
-            doodle.name = name
-            doodle.date = Date()
-            doodle.filePath = url.path
-
-            try? PersistenceController.shared.container.viewContext.save()
             
-            print("Se guardó la escena como \(name).scn (\(url.path), \(doodle.id))")
+            let context = PersistenceController.shared.container.viewContext
+            let fetchRequest: NSFetchRequest<Doodle> = Doodle.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "name == %@", name)
+
+            let doodle: Doodle
+            if let existing = try? context.fetch(fetchRequest).first {
+                doodle = existing
+                doodle.date = Date()
+                print("Actualizando entrada existente para \(name) con UUID \(String(describing: doodle.id))")
+            } else {
+                doodle = Doodle(context: context)
+                doodle.id = UUID()
+                doodle.name = name
+                doodle.date = Date()
+                print("Creando nueva entrada para \(name) con UUID \(String(describing: doodle.id))")
+            }
+
+            
+            do {
+                try context.save()
+                print("Escena guardada como \(name).scn (\(url.path), \(doodle.id ?? UUID()))")
+            } catch {
+                print("Error al guardar la escena en Core Data: \(error.localizedDescription)")
+            }
         }
         
         @objc func loadScene(from name: String, in sceneView: ARSCNView) {
