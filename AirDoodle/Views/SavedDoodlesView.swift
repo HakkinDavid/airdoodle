@@ -39,9 +39,9 @@ struct SavedDoodlesView: View {
                 List {
                     ForEach(doodles) { doodle in
                         HStack {
-                            NavigationLink(destination: DoodleUIView(loadingDoodleName: doodle.name ?? "")) {
+                            NavigationLink(destination: DoodleUIView(loadingDoodleName: doodle.name)) {
                                 VStack(alignment: .leading) {
-                                    Text(doodle.name ?? "(Sin nombre)")
+                                    Text(doodle.name ?? "(sin nombre)")
                                         .font(.headline)
                                     if let date = doodle.date {
                                         Text(date, style: .date)
