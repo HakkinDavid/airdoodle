@@ -51,7 +51,7 @@ struct OptionsView: View {
                     if value == "DoodleUIView" {
                         DoodleUIView()
                     } else if value == "SavedDoodlesView" {
-                        SavedDoodlesView()
+                        SavedDoodlesView().environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
                     }
                 }
             }
