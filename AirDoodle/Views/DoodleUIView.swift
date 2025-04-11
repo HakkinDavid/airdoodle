@@ -9,6 +9,7 @@ struct DoodleUIView: View {
     @State private var arView = ARSCNView()
     @State private var sceneName = "art_scene_" + String(Date().timeIntervalSince1970)
     @State private var hideUI: Bool = false
+    @State var loadingDoodleName: String? = nil
     
     private var selectedUIColor: UIColor {
         UIColor(selectedColor)
@@ -17,6 +18,12 @@ struct DoodleUIView: View {
     var body: some View {
         ZStack {
             ARDoodleView(selectedTool: $selectedTool, lineWidth: $lineWidth, selectedColor: .constant(selectedUIColor), coordinator: $coordinator, arView: $arView, sceneName: $sceneName)
+                .onAppear {
+                    if loadingDoodleName != nil {
+                        $coordinator.wrappedValue.loadScene(from: loadingDoodleName!, in: $arView.wrappedValue)
+                        sceneName = loadingDoodleName!
+                    }
+                }
                 .edgesIgnoringSafeArea(.all)
             
             if !hideUI {
@@ -101,7 +108,7 @@ struct DoodleUIView: View {
                         }) {
                             Text("Cargar escena")
                                 .padding()
-                                .background(Color.green)
+                                .background(Color.purple)
                                 .foregroundColor(.white)
                                 .clipShape(Capsule())
                         }
