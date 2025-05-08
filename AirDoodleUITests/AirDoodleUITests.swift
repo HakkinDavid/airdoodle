@@ -30,6 +30,41 @@ final class AirDoodleUITests: XCTestCase {
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
+    
+    @MainActor
+    func testImport() throws {
+        #if os(iOS)
+            let app = XCUIApplication()
+            app.launch()
+            app.buttons["🌠 Saved doodles"].tap()
+            app.buttons["Import AirDoodle"].tap()
+            app.buttons["Cancel"].tap()
+        #endif
+    }
+    
+    @MainActor
+    func testExport() throws {
+        #if os(iOS)
+            let app = XCUIApplication()
+            app.launch()
+            app.buttons["🌠 Saved doodles"].tap()
+            app.buttons["square.and.arrow.up"].tap()
+            app.buttons["Cancel"].tap()
+        #endif
+    }
+    @MainActor
+    func testRename() throws {
+        #if os(iOS)
+            let app = XCUIApplication()
+            app.launch()
+            app.buttons["🌠 Saved doodles"].tap()
+            app.buttons["pencil"].tap()
+            app.textFields["New name"].tap()
+            app.textFields["New name"].typeText("Testing")
+            app.buttons["Save"].tap()
+        #endif
+    }
+    
 
     @MainActor
     func testLaunchPerformance() throws {

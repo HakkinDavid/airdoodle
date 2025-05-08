@@ -36,7 +36,7 @@ struct OptionsView: View {
                             .background(Color.gray.opacity(0.45))
                             .cornerRadius(10)
                         
-                        NavigationLink("🌠 Dibujos guardados", value: "SavedDoodlesView")
+                        NavigationLink("saveddoodles", value: "SavedDoodlesView")
                             .font(.title)
                             .fontWeight(.semibold)
                             .foregroundColor(.white)
